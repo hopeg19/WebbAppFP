@@ -1,8 +1,6 @@
 import os
 from flask import Flask, request, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
-import json
-import util
 
 # get current app directory
 basedir = os.path.abspath(os.path.dirname(__file__))
