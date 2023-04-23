@@ -15,15 +15,24 @@ app = Flask(__name__)
 @app.route('/')
 # this is how you define a function in Python
 def index():
-    # this is your index page
-    # no need to specify which type this varible is...
-    # in Python you can even do this:
-    # a = 'aaa'
-    # a = 1
-    log = 'Hello world.'
-    # using render_template function, Flask will search
-    # the file named index.html under templates folder
-    return render_template('index.html', log_html = log)
+   # record = util.run_and_fetch_sql(cursor, "CREATE TABLE public."TestTable"
+#(
+#    "First Name" character varying(225),
+#    "Last Name" character varying(225),
+#   "Phone Number" character varying(225),
+ #   "Email" character varying(225),
+ #   "Preferred Contact" character varying(225),
+ #   PRIMARY KEY ("Last Name")
+#);
+
+#ALTER TABLE IF EXISTS public."TestTable"
+ #   OWNER to raywu1990;")
+  #  return render_template('index.html', log_html = log)
+
+@app.route()
+
+#INSERT INTO TestTable
+#VALUES (value1, value2, value3, ...);
 
 
 if __name__ == '__main__':
