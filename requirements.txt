@@ -1,0 +1,5 @@
+Flask
+Jinja2
+psycopg2-binary
+flask-sqlalchemy==3.0.3
+markupsafe
