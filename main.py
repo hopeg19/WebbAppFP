@@ -44,14 +44,26 @@ class Contact(db.Model):
 def index():
 	# locates all the subclasses of db.Model and creates corresponding tables in the database for them
 	# brute-force solution to avoid updating existing database tables to a different schema
+	events = Event.query.all()
+	context = {
+		'events': events
+	}
 
+	return render_template('index.html', context=context)
 
-	return render_template('index.html')
-
-
-@app.route('/api/get_events', methods=['GET'])
-def get_user():
-	return util.parse_contact(Contact.query.all())
+@app.route('/events/<int:event_id>', methods=['GET'])
+def event(event_id):
+	event = Event.query.filter_by(id=event_id).first()
+	print(event)
+	if event is None:
+		return render_template('404_error.html'), 404
+	contacts = Contact.query.filter_by(id=event.id).all()
+	context = {
+		'event': event,
+		'contacts': contacts
+	}
+	print(context)
+	return render_template('event.html', context=context)
 
 
 # default page for 404 error
