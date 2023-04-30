@@ -54,15 +54,17 @@ def index():
 	}
 	return render_template('index.html', context=context)
 
-@app.route('/add-event/<event_id>')
+@app.route('/add-event/<name>')
 def add_event(name):
 	print(name)
-	# locates all the subclasses of db.Model and creates corresponding tables in the database for them
-	# brute-force solution to avoid updating existing database tables to a different schema
+	new_event = Event(name=name)
+	db.session.add(new_event)
+	db.session.commit()
+
 	
 	return redirect("/")
 
-@app.route('/events/<int:event_id>', methods=['GET'])
+@app.route('/events/<int:event_id>', methods=['GET', 'POST'])
 def event(event_id):
 	event = Event.query.filter_by(id=event_id).first()
 	print(event)
@@ -71,9 +73,13 @@ def event(event_id):
 	contacts = Contact.query.filter_by(id=event.id).all()
 	context = {
 		'event': event,
-		'contacts': contacts
+		'contacts': contacts,
 	}
-	print(context)
+
+
+	if request.method == 'POST':
+		print(request.form['first_name'])
+
 	return render_template('event.html', context=context)
 
 
@@ -87,7 +93,7 @@ def page_not_found(e):
 @app.errorhandler(500)
 def server_error(e):
 	print(e)
-	return render_template('500_error.html'), 500
+	return render_template('500_error.html', e=e), 500
 
 
 if __name__ == '__main__':

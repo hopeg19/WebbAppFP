@@ -2,10 +2,21 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-
+  <button class="btn btn-primary" type="submit" onclick="location.href='/';">Back</button>
     <table class="table table-striped">
         <thead>
                 <h1>Your Contacts</h1>
+                <form action = "{{ url_for('event', event_id=context.event.id)}}" method = "post">
+                  <div class="col-md-6 form-group">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
         <tr>
           <th scope="col">First Name</th>
           <th scope="col">Last Name</th>
@@ -15,13 +26,11 @@
         {% for contact in context.contacts %}
             <tr>
               <th scope="row">{{contact.first_name}}</th>
-              <th scope="row">{{contact.email}}</th>
+              <th scope="row">{{contact.last_name}}</th>
             </tr>
         {% endfor %}
         
         </tbody>
       </table>
 </div>
-
-
 {% endblock %}
