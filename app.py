@@ -79,9 +79,60 @@ def event(event_id):
 
 	if request.method == 'POST':
 		print(request.form['first_name'])
+		first_name = request.form['first_name']
+		last_name = request.form['last_name']
+		email = request.form['email']
+		phone = request.form['phone']
+		#preference = request.form['value']
+		return redirect(url_for('add_contact', id=event_id, first_name = first_name, last_name=last_name,
+                                        email=email, phone=phone))
+		#new_contact = Contact(first_name=first_name)
+	        #db.session.add(new_contact)
+	        #db.session.commit()
+
+	contacts = Contact.query.all()
+	#context = {
+         #       'events': events'
+          #      'contacts':contacts,
+         #      }
+                
 
 	return render_template('event.html', context=context)
 
+
+@app.route('/add-contact/<id>/<first_name>/<last_name>/<email>/<phone>')
+def add_contact(id, first_name, last_name, email, phone):
+	print(first_name)
+	print(id)
+	print(last_name)
+	print(email)
+	print(phone)
+	prefers_email = True
+	event_id = id
+	new_contact = Contact(id=id, first_name=first_name, last_name=last_name, email=email,
+                              phone=phone, prefers_email=prefers_email, event_id=event_id)
+	
+	db.session.add(new_contact)
+	db.session.commit()
+
+	#return redirect("/")
+	return redirect(url_for(event, event_id=event_id))
+
+"""@app.route('/events/<int:event_id>', methods=['POST'])
+def add_contact(event_id):
+       
+        first_name = request.form['first_name']
+        new_contact = Contact(first_name=first_name)
+        db.session.add(new_contact)
+        db.session.commit()
+
+        contacts = Contact.query.all()
+        context = {
+		'event': event,
+		'contacts': contacts,
+	}
+        return render_template('event.html', context=context)
+"""
 
 # default page for 404 error
 # e.g. undefined service: http://127.0.0.1:5000/aa
