@@ -6,7 +6,7 @@
     <table class="table table-striped">
         <thead>
                 <h1>Your Contacts</h1>
-                <form action = "{{ url_for('event', event_id=context.event.id)}}" method = "post">
+                <form class="needs-validation" novalidate="" action="{{ url_for('event', event_id=context.event.id)}}" method = "post">
                   <div class="col-md-6 form-group">
                     <label for="first_name" class="form-label">First Name</label>
                     <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name">
@@ -15,7 +15,7 @@
                     <label for="last_name" class="form-label">Last Name</label>
                     <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name">
                   </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary" id="submit-button">Submit</button>
               </form>
         <tr>
           <th scope="col">First Name</th>
