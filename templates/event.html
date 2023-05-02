@@ -15,11 +15,30 @@
                     <label for="last_name" class="form-label">Last Name</label>
                     <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name">
                   </div>
+		  <div class="col-md-6 form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                  </div>
+		  <div class="col-md-6 form-group">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+                  </div>
+		  <div class="col-md-6 form-group">
+                    <label for="prefers" class="form-label">Preference</label>
+		    <select class="form-select" aria-label="Default select example" id="last_name" id="last_name" placeholder="Last Name">
+  			<option selected>Select Preference</option>
+  			<option value="True">Email</option>
+  			<option value="False">Phone</option>
+		    </select>
+                  </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
               </form>
         <tr>
           <th scope="col">First Name</th>
           <th scope="col">Last Name</th>
+	  <th scope="col">Email</th>
+	  <th scope="col">Phone</th>
+	  <th scope="col">Preference</th>
         </tr>
         </thead>
         <tbody>
@@ -27,6 +46,9 @@
             <tr>
               <th scope="row">{{contact.first_name}}</th>
               <th scope="row">{{contact.last_name}}</th>
+	      <th scope="row">{{contact.email}}</th>
+	      <th scope="row">{{contact.phone}}</th>
+	      <th scope="row">{{contact.prefers_email}}</th>
             </tr>
         {% endfor %}
         
