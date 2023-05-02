@@ -19,7 +19,7 @@ db = SQLAlchemy(app)
 class Event(db.Model):
 	__tablename__ = 'events'
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(64), unique=True)
+	name = db.Column(db.String(64))
 	contacts = db.relationship('Contact', backref='contacts')
 	def __repr__(self):
 		return '<Event %r>' % self.name
@@ -27,13 +27,11 @@ class Event(db.Model):
 class Contact(db.Model):
 	__tablename__ = 'users'
 	id = db.Column(db.Integer, primary_key=True)
-	first_name = db.Column(db.String(64), unique=True, index=True)
+	first_name = db.Column(db.String(64))
 	last_name = db.Column(db.String(64))
 	email = db.Column(db.String(64))
 	phone = db.Column(db.String(64))
-	prefers_email = db.Column(db.Boolean)
-
-
+	preference = db.Column(db.String(15))
 	event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
 	def __repr__(self):
 		return '<Contact %r>' % self.first_name
@@ -63,76 +61,77 @@ def add_event(name):
 
 	
 	return redirect("/")
+@app.route('/delete')
+def delete():
+	db.drop_all()
+	db.create_all()
+	
+	return redirect("/")
+
+@app.route('/introductions')
+def introductions():
+	
+	return render_template('introductions.html')
 
 @app.route('/events/<int:event_id>', methods=['GET', 'POST'])
 def event(event_id):
-	event = Event.query.filter_by(id=event_id).first()
-	print(event)
-	if event is None:
-		return render_template('404_error.html'), 404
-	contacts = Contact.query.filter_by(id=event.id).all()
-	context = {
-		'event': event,
-		'contacts': contacts,
-	}
-
-
+	print(event_id)
 	if request.method == 'POST':
-		print(request.form['first_name'])
 		first_name = request.form['first_name']
 		last_name = request.form['last_name']
 		email = request.form['email']
 		phone = request.form['phone']
-		#preference = request.form['value']
-		return redirect(url_for('add_contact', id=event_id, first_name = first_name, last_name=last_name,
-                                        email=email, phone=phone))
-		#new_contact = Contact(first_name=first_name)
-	        #db.session.add(new_contact)
-	        #db.session.commit()
+		prefers_email = request.form['preference']
+		print("HERE\n\n\n",prefers_email)
 
+		return redirect(url_for('add_contact', first_name = first_name, last_name=last_name,
+                                        email=email, phone=phone, prefers_email=prefers_email, event_id=event_id))
+
+
+	event = Event.query.filter_by(id=event_id).first()
+	print(event)
+	if event is None:
+		return render_template('404_error.html'), 404
+	contacts = Contact.query.filter_by(event_id=event.id).all()
+	context = {
+		'event': event,
+		'contacts': contacts,
+	}
 	contacts = Contact.query.all()
-	#context = {
-         #       'events': events'
-          #      'contacts':contacts,
-         #      }
-                
+	
 
 	return render_template('event.html', context=context)
 
 
-@app.route('/add-contact/<id>/<first_name>/<last_name>/<email>/<phone>')
-def add_contact(id, first_name, last_name, email, phone):
-	print(first_name)
-	print(id)
-	print(last_name)
-	print(email)
-	print(phone)
-	prefers_email = True
-	event_id = id
-	new_contact = Contact(id=id, first_name=first_name, last_name=last_name, email=email,
-                              phone=phone, prefers_email=prefers_email, event_id=event_id)
+@app.route('/add-contact/<first_name>/<last_name>/<email>/<phone>/<prefers_email>/<event_id>')
+def add_contact(first_name, last_name, email, phone, prefers_email, event_id):
+	event = Event.query.filter_by(id=event_id).first()
+	if event is None:
+		return redirect('page_not_found', 404)
+	print("Creating a new contact for event" , event_id)
+	print(prefers_email)
+
+	if prefers_email == 'True':
+		prefers_email = 'Email'
+		
+
+	elif prefers_email == 'False':
+		prefers_email = 'Phone'
+
+	else:
+		prefers_email = 'None'
+	print(prefers_email)
+		
+	new_contact = Contact(first_name=first_name, last_name=last_name, email=email,
+                              phone=phone, preference=prefers_email, event_id=event_id)
 	
 	db.session.add(new_contact)
 	db.session.commit()
 
 	#return redirect("/")
-	return redirect(url_for(event, event_id=event_id))
+	return redirect(url_for('event', event_id=event_id))
 
-"""@app.route('/events/<int:event_id>', methods=['POST'])
-def add_contact(event_id):
-       
-        first_name = request.form['first_name']
-        new_contact = Contact(first_name=first_name)
-        db.session.add(new_contact)
-        db.session.commit()
 
-        contacts = Contact.query.all()
-        context = {
-		'event': event,
-		'contacts': contacts,
-	}
-        return render_template('event.html', context=context)
-"""
 
 # default page for 404 error
 # e.g. undefined service: http://127.0.0.1:5000/aa
