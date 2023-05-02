@@ -73,6 +73,11 @@ def introductions():
 	
 	return render_template('introductions.html')
 
+@app.route('/motivations')
+def motivations():
+
+	return render_template('motivations.html')
+
 @app.route('/events/<int:event_id>', methods=['GET', 'POST'])
 def event(event_id):
 	print(event_id)
